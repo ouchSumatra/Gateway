@@ -3,39 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Infrastructure | Partner Gateway</title>
+    <title>Gateway</title>
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        .container { flex: 1; padding: 40px; border: 1px solid #333; margin: 20px; background: #050505; box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
-        h1 { color: #D4AF37; letter-spacing: 4px; border-bottom: 1px solid #D4AF37; padding-bottom: 10px; text-transform: uppercase; }
-        .protocol-status { color: #00FF00; font-weight: bold; margin-bottom: 30px; letter-spacing: 1px; }
-        .content { line-height: 1.6; max-width: 800px; font-size: 18px; }
-        footer { border-top: 1px solid #D4AF37; padding: 15px; text-align: center; font-size: 10px; color: #D4AF37; letter-spacing: 2px; text-transform: uppercase; background: #000; }
-        .nav { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #222; }
-        .nav a { color: #D4AF37; text-decoration: none; margin-right: 15px; font-size: 12px; border: 1px solid #D4AF37; padding: 8px 15px; text-transform: uppercase; display: inline-block; }
-        .nav a:hover { background: #D4AF37; color: #000; }
-        strong { color: #D4AF37; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #eee;
+            margin: 0;
+            padding: 40px;
+        }
+        h1 {
+            color: #4ecdc4;
+            font-size: 2.4rem;
+        }
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 700px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        .card {
+            background: #1b1b1b;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #333;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #777;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <div class="nav">
-            <a href="about.html">ABOUT</a> 
-            <a href="services.html">SERVICES</a> 
-            <a href="portal.html">PORTAL</a>
+        <h1>Gateway</h1>
+        <p>Welcome to the Gateway project. This page is a placeholder for the system you are building — a clean, private, controlled entry point for your workflows.</p>
+
+        <div class="card">
+            <h2>Status</h2>
+            <p>Environment stable. SSH key configured. GitHub connection ready.</p>
         </div>
 
-        <h1>PARTNER GATEWAY</h1>
-        <p class="protocol-status">[ PITBIT PROTOCOL : ACTIVE ]</p>
-        
-        <div class="content">
-            <p><strong>Strategic Asset Optimization</strong></p>
-            <p>This gateway serves as the primary node for the <strong>120-Day Tape Cutting Bridge</strong>. We are currently synchronizing asset data with the Manila Hub to facilitate Sovereign Credit Conversion.</p>
-            <p>Access is strictly restricted to vetted partners under the <strong>Divest-Vetter Protocol</strong>.</p>
+        <div class="card">
+            <h2>Next Steps</h2>
+            <ul>
+                <li>Add your scripts or modules</li>
+                <li>Connect backend logic</li>
+                <li>Deploy to GitHub Pages or your server</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            Gateway © 2026
         </div>
     </div>
-    <footer>
-        © 2026 UNIVERSAL INFRASTRUCTURE | MANILA ASSET HUB | DIVEST-VETTER PROTOCOL
-    </footer>
 </body>
 </html>
