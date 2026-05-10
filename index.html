@@ -42,6 +42,23 @@
 </head>
 
 <body>
+    <button id="run-automation">Run Automation</button>
+<pre id="automation-output"></pre>
+<script>
+document.getElementById("run-automation").addEventListener("click", async () => {
+    const outputBox = document.getElementById("automation-output");
+    outputBox.textContent = "Running automation...";
+
+    try {
+        const response = await fetch("/run-automation");
+        const data = await response.text();
+        outputBox.textContent = data;
+    } catch (err) {
+        outputBox.textContent = "Error running automation: " + err;
+    }
+});
+</script>
+
   <div id="drilldown-block" class="drilldown-box"></div>
     <div class="container">
         <h1>Gateway</h1>
