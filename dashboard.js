@@ -1,34 +1,39 @@
-// Dashboard Module
-// Aggregates system metrics and renders a summary panel
+/**
+ * Gateway Automation UI - Dashboard Module
+ * Automatically renders forensic engine analytics for reinsurer review.
+ */
 
-import { getLedger } from "./supabase.js";
+class GatewayDashboard {
+    constructor(engineInstance) {
+        this.engine = engineInstance;
+    }
 
-async function loadDashboard() {
-    const el = document.getElementById("dashboard-block");
-    if (!el) return;
+    /**
+     * Automatically pulls the latest forensic package and updates the DOM
+     */
+    autoRefreshMetrics() {
+        const report = this.engine.generateReinsurancePackage();
+        
+        // Direct DOM Injection - Pulling harvested metrics "till now"
+        this.updateDOMElement("total-liens-value", `$${report.summary.totalValidatedLiensValue.toLocaleString()}`);
+        this.updateDOMElement("missed-expenses", `$${report.summary.totalMissedExpensesRecovered.toLocaleString()}`);
+        this.updateDOMElement("nvc-count", report.summary.totalAmbientNvcCount);
+        this.updateDOMElement("suppression-incidents", report.summary.systemicSuppressionIncidents);
 
-    el.innerHTML = "Loading dashboard...";
+        console.log("⚡ Dashboard automatically synced with latest forensic harvest.");
+        
+        // Trigger the map overlay pipeline automatically
+        if (typeof window.renderHeatmap === "function") {
+            window.renderHeatmap(report.fullDataset);
+        }
+    }
 
-    try {
-        // Fetch latest ledger entries
-        const ledger = await getLedger(50);
-
-        const totalEntries = ledger?.length || 0;
-        const latest = ledger?.[0] || null;
-
-        const parcels = new Set(ledger?.map(e => e.parcel_id));
-        const parcelCount = parcels.size;
-
-        el.innerHTML = `
-            <div><strong>System Status:</strong> Online</div>
-            <div><strong>Total Ledger Entries:</strong> ${totalEntries}</div>
-            <div><strong>Unique Parcels:</strong> ${parcelCount}</div>
-            <div><strong>Last Update:</strong> ${latest ? latest.created_at : "N/A"}</div>
-            <div><strong>Last Parcel:</strong> ${latest ? latest.parcel_id : "N/A"}</div>
-        `;
-    } catch (err) {
-        el.innerHTML = "Dashboard unavailable.";
+    updateDOMElement(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.innerText = value;
+        } else {
+            console.warn(`[Gateway UI] Core metric display element '#${id}' not found in HTML.`);
+        }
     }
 }
-
-export { loadDashboard };
