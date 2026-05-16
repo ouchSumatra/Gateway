@@ -1,11 +1,11 @@
- /**
- * Gateway Automation Engine - Forensic Intelligence Module
- * Tracks VOC data suppression, identifies flaws, and validates missed expenses over time.
+/**
+ * Gateway Automation Engine - Forensic Actuarial Module
+ * Translates suppressed data and missed expenses into standard reinsurance metrics.
  */
 
 class GatewayForensicEngine {
     constructor(config = {}) {
-        // NJDEP or typical regulatory action levels (in ppb/ppm)
+        // Regulatory thresholds acting as the baseline credibility check
         this.regulatoryThresholds = config.thresholds || {
             benzene: 5.0,
             tce: 1.0,
@@ -16,26 +16,26 @@ class GatewayForensicEngine {
     }
 
     /**
-     * Harvests and ingests raw environmental tracking data along the rail corridors.
-     * Automatically identifies historical gaps and uncalculated out-of-pocket liabilities.
+     * Ingests, validates, and runs an actuarial loss cost development analysis
      */
     harvestTrackSegment(rawLog) {
         const {
             segmentId,
             location,
-            timeframe,          // e.g., "2020-2026"
-            reportedVocLevels,   // What the official logs claimed
-            actualVocLevels,     // What your sensors/evidence actually found
-            reportedExpenses,    // Suppressed or understated baseline costs
-            validatedOutPockets  // Array of actual missed expenses discovered: [{item: '', cost: 0}]
+            timeframe,
+            reportedVocLevels,
+            actualVocLevels,
+            reportedExpenses,
+            validatedOutPockets // The discovered out-of-pocket leakage
         } = rawLog;
 
-        // 1. Calculate the financial leakage (Missed Expenses)
-        const totalMissedExpenses = validatedOutPockets.reduce((sum, entry) => sum + entry.cost, 0);
-        const totalActualFinancialImpact = reportedExpenses + totalMissedExpenses;
+        // 1. Map Validated Out-of-Pockets directly to IBNR Provisions
+        const ibnrProvisions = validatedOutPockets.reduce((sum, entry) => sum + entry.cost, 0);
+        const totalInitialIncurred = reportedExpenses + ibnrProvisions;
 
-        // 2. Identify Data Suppression & Inaccuracies
+        // 2. Determine Data Credibility & Tail Development Factors
         let suppressionDetected = false;
+        let maxBreachRatio = 1.0;
         const variances = {};
 
         for (const [chemical, actualValue] of Object.entries(actualVocLevels)) {
@@ -44,30 +44,43 @@ class GatewayForensicEngine {
             variances[chemical] = variance;
 
             const limit = this.regulatoryThresholds[chemical] || 1.0;
-            // If actual levels breach thresholds while reported values hid them -> Suppression Flag
-            if (actualValue >= limit && reportedValue < limit) {
-                suppressionDetected = true;
+            if (actualValue >= limit) {
+                const ratio = actualValue / limit;
+                if (ratio > maxBreachRatio) maxBreachRatio = ratio;
+                if (reportedValue < limit) {
+                    suppressionDetected = true;
+                }
             }
         }
 
-        // 3. Automated Classification: Lien vs. NVC
-        // High variance/suppression or heavy out-of-pocket financial leaks graduate immediately to a Lien.
-        const classification = (suppressionDetected || totalMissedExpenses > 50000) ? "LIEN" : "NVC";
+        const classification = (suppressionDetected || ibnrProvisions > 50000) ? "LIEN" : "NVC";
+
+        // 3. ACTUARIAL METHODOLOGY LAYERING
+        // Credibility Factor (Z): 1.0 is pristine data, lower means the primary carrier's data is untrusted
+        const credibilityFactor = suppressionDetected ? parseFloat((1 / (1 + (maxBreachRatio * 0.15))).toFixed(2)) : 1.0;
+        
+        // Tail Development Factor (DF): Multiplier for long-tail latent environmental decay
+        const tailDevelopmentFactor = suppressionDetected ? parseFloat((1.2 + (maxBreachRatio * 0.05)).toFixed(2)) : 1.05;
+
+        // Ultimate Loss Cost Calculation: (Reported + IBNR) * Tail Development Factor
+        const ultimateLossCost = Math.round(totalInitialIncurred * tailDevelopmentFactor);
 
         const forensicRecord = {
             segmentId,
             location,
             timeframe,
-            metrics: {
-                reportedVocLevels,
-                actualVocLevels,
-                variances
-            },
+            metrics: { reportedVocLevels, actualVocLevels, variances },
             financials: {
                 reportedExpenses,
-                totalMissedExpenses,
-                totalActualFinancialImpact,
-                breakdown: validatedOutPockets
+                ibnrProvisions,
+                totalInitialIncurred,
+                breakdown: validatedOutPockets,
+                actuarialPricing: {
+                    credibilityFactor,
+                    tailDevelopmentFactor,
+                    ultimateLossCost, // Total projected liability for the premium base
+                    requiredReserveLoading: ultimateLossCost - reportedExpenses
+                }
             },
             audit: {
                 suppressionDetected,
@@ -81,24 +94,27 @@ class GatewayForensicEngine {
     }
 
     /**
-     * Compiles the entire historical audit up "till now" (2026) into an ironclad reinsurance report.
+     * Generates a structural portfolio risk feed for direct integration into reinsurance models
      */
     generateReinsurancePackage() {
         let globalLiensTotal = 0;
         let globalNvcCount = 0;
-        let globalMissedExpensesTotal = 0;
-        const criticalSuppressionZones = [];
+        let globalIbnrTotal = 0;
+        let aggregateUltimateLossCost = 0;
+        const criticalAuditTargets = [];
 
         this.historicalRegistry.forEach(record => {
-            globalMissedExpensesTotal += record.financials.totalMissedExpenses;
+            globalIbnrTotal += record.financials.ibnrProvisions;
+            aggregateUltimateLossCost += record.financials.actuarialPricing.ultimateLossCost;
 
             if (record.audit.classification === "LIEN") {
-                globalLiensTotal += record.financials.totalActualFinancialImpact;
+                globalLiensTotal += record.financials.actuarialPricing.ultimateLossCost;
                 if (record.audit.suppressionDetected) {
-                    criticalSuppressionZones.push({
+                    criticalAuditTargets.push({
                         location: record.location,
                         timeframe: record.timeframe,
-                        financialLeak: record.financials.totalMissedExpenses
+                        credibilityFactor: record.financials.actuarialPricing.credibilityFactor,
+                        ultimateLossCost: record.financials.actuarialPricing.ultimateLossCost
                     });
                 }
             } else {
@@ -108,19 +124,22 @@ class GatewayForensicEngine {
 
         return {
             reportGenerated: new Date().toISOString(),
+            actuarialSummary: {
+                portfolioCredibilityScore: parseFloat((this.historicalRegistry.reduce((acc, r) => acc + r.financials.actuarialPricing.credibilityFactor, 0) / this.historicalRegistry.length || 0).toFixed(2)),
+                totalIbnrIdentified: globalIbnrTotal,
+                aggregateUltimateLossCost: aggregateUltimateLossCost // The macro number driving the premium increase
+            },
             summary: {
                 totalValidatedLiensValue: globalLiensTotal,
-                totalMissedExpensesRecovered: globalMissedExpensesTotal,
                 totalAmbientNvcCount: globalNvcCount,
-                systemicSuppressionIncidents: criticalSuppressionZones.length
+                systemicSuppressionIncidents: criticalAuditTargets.length
             },
-            forensicTargets: criticalSuppressionZones,
+            forensicTargets: criticalAuditTargets,
             fullDataset: this.historicalRegistry
         };
     }
 }
 
-// Export for use in app.js and dashboard.js
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = GatewayForensicEngine;
 }
