@@ -1,39 +1,72 @@
-// NVC Engine (Negative Value Certificate Calculator)
-// Computes a placeholder NVC score until real backend data is connected
+/**
+ * Gateway Forensic Platform - Regional NVC Impact Matrix
+ * Maps client paralysis and surrounding property degradation across specific NJ port nodes.
+ */
 
-function calculateNVC(parcel) {
-    // Placeholder logic — replace with real contamination + lien + tax data
-    const base = 1000;
+const RegionalPortManifest = {
+    "newark": {
+        clientCount: 400,
+        surroundingPropertyRadiusMiles: 2.5,
+        gridStarvationFactor: 1.95, // Extreme load gap for heavy cranes
+        healthVulnerabilityIndex: 0.88
+    },
+    "gloucester_city": {
+        clientCount: 100,
+        surroundingPropertyRadiusMiles: 1.5,
+        gridStarvationFactor: 1.45,
+        healthVulnerabilityIndex: 0.72
+    },
+    "camden": {
+        clientCount: 40,
+        surroundingPropertyRadiusMiles: 1.8,
+        gridStarvationFactor: 1.60,
+        healthVulnerabilityIndex: 0.85
+    },
+    "trenton": {
+        clientCount: 0, // Terminal state: Port Closed
+        surroundingPropertyRadiusMiles: 3.0,
+        gridStarvationFactor: 2.00, // Total infrastructure abandonment penalty
+        healthVulnerabilityIndex: 0.65
+    },
+    "paulsboro": {
+        clientCount: 25, // Baseline estimation pending final audit
+        surroundingPropertyRadiusMiles: 1.2,
+        gridStarvationFactor: 1.30,
+        healthVulnerabilityIndex: 0.78
+    }
+};
 
-    const factors = {
-        delinquent: 1.2,
-        lien: 1.5,
-        contaminated: 2.0,
-        corridor: 2.5
-    };
+class RegionalNvcEngine {
+    /**
+     * Calculates the true NVC impact by factoring in surrounding track properties
+     */
+    calculateNodeImpact(nodeName, yearsSuppressed) {
+        const node = RegionalPortManifest[nodeName.toLowerCase()];
+        if (!node) return null;
 
-    let score = base;
+        // Base indirect cost per paralyzed shipping client over time
+        const clientLossBaseline = node.clientCount * 125000 * yearsSuppressed;
+        
+        // Monetize the surrounding property degradation on either side of the tracks
+        const surroundingPropertyImpact = Math.round(
+            (node.surroundingPropertyRadiusMiles * 5000000) * node.gridStarvationFactor * (1 + 0.08)**yearsSuppressed
+        );
 
-    if (parcel.status === "delinquent") score *= factors.delinquent;
-    if (parcel.status === "lien") score *= factors.lien;
-    if (parcel.contaminated) score *= factors.contaminated;
-    if (parcel.inCorridor) score *= factors.corridor;
+        // Community health liability loading
+        const localizedHealthBurden = Math.round(clientLossBaseline * node.healthVulnerabilityIndex * 0.15);
 
-    return Math.round(score);
+        return {
+            nodeName,
+            indirectCosts: {
+                clientParalysisLoss: clientLossBaseline,
+                tracksidePropertyDiminution: surroundingPropertyImpact,
+                communityHealthBurden: localizedHealthBurden
+            },
+            totalNvcClaimBlock: clientLossBaseline + surroundingPropertyImpact + localizedHealthBurden
+        };
+    }
 }
 
-// Render NVC into UI
-function renderNVC(parcel, containerId = "nvc-block") {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-
-    const score = calculateNVC(parcel);
-
-    el.innerHTML = `
-        <div><strong>Parcel:</strong> ${parcel.id}</div>
-        <div><strong>Status:</strong> ${parcel.status}</div>
-        <div><strong>NVC Score:</strong> ${score}</div>
-    `;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { RegionalNvcEngine, RegionalPortManifest };
 }
-
-export { calculateNVC, renderNVC };
