@@ -1,1 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gateway Forensic - Admin Console</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-color: #c9d1d9;
+            --accent-blue: #58a6ff;
+            --accent-red: #da3637;
+            --border-color: #30363d;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .console-container {
+            width: 100%;
+            max-width: 500px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        h1 { font-size: 1.4rem; color: #f0f6fc; margin: 0; }
+        .node-badge {
+            background-color: #238636;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .control-group {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        h2 { font-size: 1rem; margin-top: 0; color: var(--accent-blue); }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .btn-primary {
+            background-color: #238636;
+            color: white;
+            border-color: #2ea44f;
+        }
+        .btn-danger {
+            background-color: var(--accent-red);
+            color: white;
+            border-color: #f85149;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            padding: 10px;
+            font-family: inherit;
+            resize: none;
+            margin-bottom: 10px;
+        }
+        .status-log {
+            font-family: monospace;
+            font-size: 0.8rem;
+            background-color: black;
+            padding: 10px;
+            border-radius: 4px;
+            max-height: 100px;
+            overflow-y: auto;
+            color: #39ff14;
+        }
+    </style>
+</head>
+<body>
 
+<div class="console-container">
+    <header>
+        <h1>🎛️ Gateway Stealth Console</h1>
+        <p style="margin: 5px 0 0 0;">Active Node: <span class="node-badge" id="current-node">Newark</span></p>
+    </header>
+
+    <div class="control-group">
+        <h2>Phase 1: Environment Baseline</h2>
+        <button class="btn btn-primary" id="btn-plume">Deploy Plume Map Overview</button>
+        <button class="btn" id="btn-reset">Reset to Standard Base Map</button>
+    </div>
+
+    <div class="control-group">
+        <h2>Phase 2: Tactical Prompts (Hardball)</h2>
+        <button class="btn btn-danger" id="btn-hardball-conduit">Trigger 1890 Conduit Trap</button>
+        <button class="btn" style="border-color: #d29922;" id="btn-hardball-nuisance">Trigger 1934 Nuisance Injunction</button>
+    </div>
+
+    <div class="control-group">
+        <h2>Phase 3: Live Ingestion Registry</h2>
+        <select id="admission-path" class="btn" style="text-align: left; padding: 10px;">
+            <option value="PATH_A_REMEDIATION">PATH A: Prior Remediation Claimed</option>
+            <option value="PATH_B_TRANSFER">PATH B: Prior Liability Transfer Attempt</option>
+            <option value="PATH_C_INFRASTRUCTURE">PATH C: Alternative Corridor Proposal</option>
+        </select>
+        <textarea id="live-notes" placeholder="Type verbal treaty citations or admissions here..."></textarea>
+        <button class="btn btn-primary" id="btn-log-admission">Commit Admission to Ledger</button>
+    </div>
+
+    <div class="control-group">
+        <h2>Console Telemetry Log</h2>
+        <div class="status-log" id="telemetry-display">[SYSTEM]: Console armed. Awaiting broadcast initialization...</div>
+    </div>
+</div>
+
+<script type="module">
+    import { AdminForensicController } from './controller.js';
+
+    // Initialize controller locked onto the Newark grid
+    const controller = new AdminForensicController('newark');
+    const logDisplay = document.getElementById('telemetry-display');
+
+    function appendLog(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        logDisplay.innerHTML += `<br>[${timestamp}] ${message}`;
+        logDisplay.scrollTop = logDisplay.scrollHeight;
+    }
+
+    // Bind Button Clicks to controller.js Methods
+    document.getElementById('btn-plume').addEventListener('click', () => {
+        controller.initiatePlumeOverview();
+        appendLog("🚀 Transmitted: Deploy VOC Plume Layer");
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+        controller.resetPresentation();
+        appendLog("🔄 Transmitted: Reset Map to Baseline");
+    });
+
+    document.getElementById('btn-hardball-conduit').addEventListener('click', () => {
+        controller.activateHardballProtocol('NWK_1890_CONDUIT');
+        appendLog("🔥 Transmitted: HARDBALL - 1890 Conduit Deck");
+    });
+
+    document.getElementById('btn-hardball-nuisance').addEventListener('click', () => {
+        controller.activateHardballProtocol('NWK_1934_NUISANCE');
+        appendLog("🔥 Transmitted: HARDBALL - 1934 Nuisance Deck");
+    });
+
+    document.getElementById('btn-log-admission').addEventListener('click', async () => {
+        const pathToken = document.getElementById('admission-path').value;
+        const notes = document.getElementById('live-notes').value;
+        const activeCard = "NEWARK_SURFACE_GRID";
+
+        if (!notes.trim()) {
+            alert("Please input the carrier's statement before anchoring ledger.");
+            return;
+        }
+
+        appendLog(`📥 Attempting registration of statement under token [${pathToken}]...`);
+        await controller.logLiveAdmission(activeCard, pathToken, notes);
+        
+        appendLog("🔒 Telemetry Locked to Supabase Audit Matrix.");
+        document.getElementById('live-notes').value = ""; // Clear input field
+    });
+</script>
+
+</body>
+</html>
