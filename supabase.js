@@ -83,3 +83,44 @@ class GatewayDatabaseClient {
 }
 
 module.exports = GatewayDatabaseClient;
+// Append: On-Demand NVC Claim Ingestion
+async function savePortClaims(calculatedLedger) {
+    const payload = Object.keys(calculatedLedger.ledger).map(nodeKey => {
+        const data = calculatedLedger.ledger[nodeKey];
+        return {
+            node_key: nodeKey,
+            display_name: data.displayName,
+            years_suppressed: data.metrics.yearsOfConcealment,
+            client_loss: data.valuationBreakdown.clientParalysisLoss,
+            health_burden: data.valuationBreakdown.compoundedHealthLiability,
+            property_diminution: data.valuationBreakdown.tracksidePropertyDiminution,
+            total_claim_block: data.enforcementOutput.totalNvcClaimBlock,
+            grid_lockout_status: data.gridLockoutStatus,
+            timestamp: new Date().toISOString()
+        };
+    });
+
+    // Execute direct REST injection to anchor the multi-node asset values
+    const url = `${SUPABASE_URL}/rest/v1/regional_nvc_ledger`;
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": "resolution=merge" // Ensures upsert behavior without duplicating entries
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+        console.error("❌ [DATABASE_SYNC_FAILURE]: Failed to anchor forensic claims:", await res.text());
+        return null;
+    }
+    
+    console.log("✅ [DATABASE_SYNC_SUCCESS]: Multi-port NVC claims securely committed to Supabase ledger.");
+    return true;
+}
+
+// Update export to include the new enforcement ingestion layer
+export { sbFetch, getLedger, savePortClaims };
