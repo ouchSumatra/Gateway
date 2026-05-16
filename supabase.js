@@ -37,3 +37,49 @@ async function getLedger(limit = 20) {
 }
 
 export { sbFetch, getLedger };
+/**
+ * Gateway Database Layer - NVC Portfolio Sync
+ * File: /main/supabase.js
+ */
+
+const { createClient } = require('@supabase/supabase-layer'); // Standard structural client initialization
+
+class GatewayDatabaseClient {
+    constructor(supabaseUrl, supabaseKey) {
+        this.supabase = createClient(supabaseUrl, supabaseKey);
+    }
+
+    /**
+     * Commits calculated regional NVC blocks to the persistent ledger table
+     */
+    async syncPortNvcClaims(calculatedLedger) {
+        const payload = Object.keys(calculatedLedger.ledger).map(nodeKey => {
+            const data = calculatedLedger.ledger[nodeKey];
+            return {
+                node_key: nodeKey,
+                display_name: data.displayName,
+                years_suppressed: data.metrics.yearsOfConcealment,
+                client_loss: data.valuationBreakdown.clientParalysisLoss,
+                health_burden: data.valuationBreakdown.compoundedHealthLiability,
+                property_diminution: data.valuationBreakdown.tracksidePropertyDiminution,
+                total_claim_block: data.enforcementOutput.totalNvcClaimBlock,
+                grid_lockout_status: data.gridLockoutStatus,
+                updated_at: new Date()
+            };
+        });
+
+        // Upsert into your core financial ledger table to anchor the asset values
+        const { error } = await this.supabase
+            .from('regional_nvc_ledger')
+            .upsert(payload, { onConflict: 'node_key' });
+
+        if (error) {
+            console.error('❌ [DATABASE_SYNC_FAILURE]: Failed to anchor forensic claims:', error.message);
+            throw error;
+        }
+
+        console.log('✅ [DATABASE_SYNC_SUCCESS]: Multi-port NVC claims securely committed to Supabase ledger.');
+    }
+}
+
+module.exports = GatewayDatabaseClient;
