@@ -2,195 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gateway Forensic Platform - Presentation Display</title>
+    <title>Gateway Forensic Platform - Systemic VOC Matrix</title>
     <style>
-        :root {
-            --bg-dark: #070a13;
-            --panel-bg: rgba(22, 27, 34, 0.95);
-            --border-glow: #30363d;
-            --text-main: #f0f6fc;
-            --text-muted: #8b949e;
-            --alert-amber: #d29922;
-        }
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden;
-        }
-        /* Simulated Interactive GIS Map Canvas */
-        #forensic-map-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #11192e 0%, #070a13 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1;
-        }
-        .map-placeholder-text {
-            text-align: center;
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-        .map-grid-lines {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        /* Forensic Dialogue Modal Styles triggered by interact.js */
-        .forensic-dialogue-modal {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(7, 10, 19, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease-out;
-        }
-        .forensic-dialogue-hidden {
-            display: none;
-        }
-        .dialogue-card {
-            background-color: var(--panel-bg);
-            border: 2px solid var(--border-glow);
-            box-shadow: 0 0 30px rgba(88, 166, 255, 0.15);
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            box-sizing: border-box;
-        }
-        .dialogue-card h3 {
-            margin-top: 0;
-            font-size: 1.3rem;
-            color: var(--alert-amber);
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 10px;
-        }
-        .hook-text {
-            font-size: 1.05rem;
-            line-height: 1.6;
-            color: var(--text-main);
-            margin-bottom: 25px;
-        }
-        .dialogue-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .btn-dialogue-path {
-            width: 100%;
-            padding: 14px;
-            background-color: #21262d;
-            color: #c9d1d9;
-            border: 1px solid var(--border-glow);
-            border-radius: 6px;
-            font-size: 1rem;
-            text-align: left;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .btn-dialogue-path:hover {
-            background-color: #30363d;
-            border-color: #58a6ff;
-        }
-        /* Follow-up Capture Area */
-        .followup-hidden { display: none; }
-        .followup-visible {
-            margin-top: 20px;
-            border-top: 1px solid #30363d;
-            padding-top: 20px;
-            animation: slideDown 0.2s ease-out;
-        }
-        .followup-prompt {
-            font-size: 0.95rem;
-            color: #58a6ff;
-            margin-bottom: 10px;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-            background-color: #0d1117;
-            color: var(--text-main);
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            box-sizing: border-box;
-            padding: 12px;
-            font-family: inherit;
-            resize: none;
-            margin-bottom: 15px;
-        }
-        .btn-lock-ledger {
-            background-color: #238636;
-            color: white;
-            border: 1px solid #2ea44f;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.95rem;
-        }
-        .success-confirmation {
-            color: #39ff14;
-            font-weight: bold;
-            text-align: center;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        body { background-color: #050a12; color: #4af626; font-family: 'Courier New', monospace; padding: 30px; margin: 0; }
+        .matrix-header { border-bottom: 2px solid #1f3a60; padding-bottom: 15px; margin-bottom: 25px; color: #5dade2; font-size: 1.2rem; font-weight: bold; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .panel { border: 1px solid #1f3a60; padding: 20px; background: rgba(10, 25, 47, 0.7); box-shadow: 0 0 15px rgba(31, 58, 96, 0.3); }
+        .panel-title { font-weight: bold; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px dashed #1f3a60; }
+        .threat-color { color: #f1948a; }
+        .solution-color { color: #5dade2; }
+        .alert-flash { color: #f4d03f; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .metric-value { font-size: 1.1rem; color: #fff; background: #112240; padding: 5px 10px; display: inline-block; margin: 5px 0; border-left: 3px solid; }
+        .voc-log { font-size: 0.85rem; color: #a6acaf; background: #070f1e; padding: 10px; border: 1px solid #1a365d; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="forensic-map-canvas">
-        <div class="map-grid-lines"></div>
-        <div class="map-placeholder-text">
-            <h2 id="map-status-header">🛰️ GATEWAY FORENSIC MATRIX INITIALIZED</h2>
-            <p id="map-status-subtext">Awaiting remote command link down the realtime channel...</p>
+    <div class="matrix-header">
+        🛰️ GATEWAY FORENSIC MATRIX // EU STEWARDSHIP & GLOBAL VOC ALIGNMENT
+    </div>
+
+    <div class="grid-container">
+        <div class="panel" style="border-color: #ec7063;">
+            <div class="panel-title threat-color">> TRANCHE 01: GLOBAL REINSURANCE ACCOUNTABILITY (VOC TRACKER)</div>
+            <p>> DETECTED CONDUCT: ARBITRARY VALUE DENIAL PATHWAY</p>
+            <p>> PARALLEL RISK: REFUGEE / LOCAL LABOR DISPLACEMENT EXPOSURE</p>
+            
+            <div class="metric-value" style="border-left-color: #ec7063;">
+                EU INSTITUTIONAL FIDUCIARY BREACH: <span class="alert-flash">CRITICAL DEVIATION</span>
+            </div>
+            
+            <div class="voc-log">
+                <strong>[VOC-LOG-09]:</strong> Underwriter patterns cross-referenced with European CSRD Double Materiality protocols. Asset manager proxy retaliation metrics initialized for next board voting cycle.
+            </div>
+        </div>
+
+        <div class="panel" style="border-color: #5dade2;">
+            <div class="panel-title solution-color">> TRANCHE 02: THE 4 Rs INFRASTRUCTURE OPTIMIZATION</div>
+            <p>> MITIGATION BLUEPRINT: DE-RISK // STABILIZE // ACCELERATE</p>
+            <p>> PORTFOLIO STATUS: REPAIR • REHAB • RESKILL • REGENERATE REVENUE</p>
+            
+            <div class="metric-value" style="border-left-color: #5dade2;">
+                EUROPEAN "JUST TRANSITION" ALIGNMENT: 98.4% MATCH
+            </div>
+            
+            <div class="voc-log">
+                <strong>[RESOLUTION-LINK]:</strong> Capital reallocation to the 4 Rs converts a negative liabilities claims dispute into an active, compliant Social Development asset for institutional backing.
+            </div>
         </div>
     </div>
 
-    <div id="dialogue-presentation-container" class="forensic-dialogue-hidden"></div>
-
-    <script type="module">
-        import { PresentationInteractionEngine } from './interact.js';
-
-        // Initialize display engine listening to the Newark stream
-        const displayEngine = new PresentationInteractionEngine('newark');
-        displayEngine.initPresentationView();
-
-        // Visual helper hook to display state transitions beneath the map canvas
-        const statusHeader = document.getElementById('map-status-header');
-        const statusSubtext = document.getElementById('map-status-subtext');
-
-        // Hook into the shared communication channel to change the background map state instantly
-        displayEngine.orchestrator.listenAndSyncPresentation((stage, target) => {
-            if (stage === 'VOC_PLUME_OVERLAY') {
-                document.getElementById('forensic-map-canvas').style.background = "radial-gradient(circle at center, #1b2611 0%, #070a13 100%)";
-                statusHeader.innerText = "📈 ACTIVE NEWARK VOC PLUME OVERLAY";
-                statusSubtext.innerText = "Displaying continuous spatial diffusion models mapped to subsurface trackside aquifers.";
-            } else if (stage === 'STANDARD_VIEW') {
-                document.getElementById('forensic-map-canvas').style.background = "radial-gradient(circle at center, #11192e 0%, #070a13 100%)";
-                statusHeader.innerText = "🛰️ GATEWAY FORENSIC MATRIX INITIALIZED";
-                statusSubtext.innerText = "Awaiting remote command link down the realtime channel...";
-            }
-        });
-    </script>
 </body>
 </html>
