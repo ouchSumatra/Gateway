@@ -15,40 +15,54 @@
             --forensic-red: #f1948a;
             --institutional-blue: #58a6ff;
         }
+
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
+            margin: 0; padding: 0; width: 100%; min-height: 100vh;
             background-color: var(--bg-terminal); color: var(--text-primary);
-            font-family: 'Courier New', monospace; overflow: hidden;
+            font-family: 'Courier New', monospace; 
+            overflow-y: auto; overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
         }
+        
         #forensic-map-canvas {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             background: radial-gradient(circle at center, #0f172a 0%, #060913 100%);
-            z-index: 1;
+            z-index: 1; pointer-events: none;
         }
         .map-grid-lines {
             position: absolute; width: 100%; height: 100%;
             background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
-            background-size: 40px 40px; z-index: 1;
+            background-size: 40px 40px;
         }
+
+        .content-wrapper {
+            position: relative; width: 92%; max-width: 1200px;
+            margin: 40px auto; z-index: 10; display: flex; flex-direction: column; gap: 30px;
+        }
+
         .matrix-header { 
-            position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 1200px; border-bottom: 2px solid var(--border-clean); 
-            padding-bottom: 15px; font-size: 1.1rem; font-weight: bold; z-index: 10;
-            display: flex; justify-content: space-between; color: var(--institutional-blue);
+            border-bottom: 2px solid var(--border-clean); padding-bottom: 15px; 
+            font-size: 1.1rem; font-weight: bold; color: var(--institutional-blue);
+            display: flex; justify-content: space-between; align-items: center;
         }
+        
         .grid-container { 
-            position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 1200px; display: grid; grid-template-columns: 1fr 1fr; 
-            gap: 25px; z-index: 10;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 25px; width: 100%;
         }
+        @media (max-width: 868px) {
+            .grid-container { grid-template-columns: 1fr; }
+        }
+
         .panel { 
-            border: 1px solid var(--border-clean); padding: 22px; 
+            border: 1px solid var(--border-clean); padding: 25px; 
             background: var(--panel-bg); backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column;
         }
         .panel-title { font-weight: bold; font-size: 1rem; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px dashed var(--border-clean); }
         .meta-line { font-size: 0.85rem; margin: 6px 0; color: #cbd5e1; }
-        .metric-value { font-size: 0.95rem; color: #fff; background: #0f172a; padding: 6px 12px; display: inline-block; margin: 10px 0; border-left: 3px solid; }
+        .metric-value { font-size: 0.95rem; color: #fff; background: #0f172a; padding: 6px 12px; display: inline-block; margin: 10px 0; border-left: 3px solid; width: fit-content; }
         .voc-log { font-size: 0.8rem; color: #94a3b8; background: #030712; padding: 12px; border: 1px solid #1e293b; margin-top: 10px; line-height: 1.4; }
+        
         .alert-flash { animation: blink 2.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     </style>
@@ -59,41 +73,56 @@
         <div class="map-grid-lines"></div>
     </div>
 
-    <div class="matrix-header">
-        <div>🛰️ GATEWAY FORENSIC MATRIX // NEWARK PUBLIC-PRIVATE CONDUIT</div>
-        <div style="font-size: 0.85rem; color: var(--matrix-glow);">PRIMARY OBJECTIVE // REGULATORY CLEARANCE FEED</div>
-    </div>
-
-    <div class="grid-container">
-        <div class="panel" style="border-color: var(--forensic-red);">
-            <div class="panel-title" style="color: var(--forensic-red);">> DIVISION 01: REINSURANCE CONSTRAINT ACCUMULATION (SWISS RE ALIGNMENT)</div>
-            <div class="meta-line">> ACTUARIAL FOCUS: PRE-EMPTIVE TREATY RISK NOTIFICATION</div>
-            <div class="meta-line">> TARGET HAZARD: TRACKSIDE VOC/NVC LIABILITIES & SUBSURFACE ENCUMBRANCES</div>
-            <div class="metric-value" style="border-left-color: var(--forensic-red);">
-                UNDERWRITING RISK BLOCK: <span class="alert-flash" style="color: var(--forensic-red);">CONTRACTUAL INTERCEPTION EMBEDDED</span>
-            </div>
-            <div class="voc-log">
-                <strong>[FORENSIC-ENFORCEMENT]:</strong> Chemical signatures of trackside VOC/NVC plumes are cross-referenced directly with Swiss Re’s legacy Environmental Impairment Liability exclusions. Hardcoding these material hazards upstream paralyzes the insurer's ability to utilize arbitrary value denials, causing an accumulation threat that forces carriers to require remediation.
-            </div>
+    <div class="content-wrapper">
+        <div class="matrix-header">
+            <div>🛰️ GATEWAY FORENSIC MATRIX // NEWARK PUBLIC-PRIVATE CONDUIT</div>
+            <div style="font-size: 0.85rem; color: var(--matrix-glow);">PRIMARY OBJECTIVE // REGULATORY CLEARANCE FEED</div>
         </div>
 
-        <div class="panel" style="border-color: var(--matrix-glow);">
-            <div class="panel-title" style="color: var(--matrix-glow);">> DIVISION 02: NEWARK INFRASTRUCTURE CONDUIT (AUM MUTUAL CONVERSION)</div>
-            <div class="meta-line">> APPLICATION: MANDATED MITIGATION FEES // CRA SLATES // TAX EQUITY EXTRACTION</div>
-            <div class="meta-line">> REDIRECTED BUILDOUT: MULTI-PHASE 4 Rs UTILITY & CORRIDOR REPOWERING</div>
-            <div class="metric-value" style="border-left-color: var(--matrix-glow);">
-                MUNICIPAL ALLOCATION STATE: <span style="color: var(--matrix-glow);">PACKAGED LOCAL WINS READY FOR DEPLOYMENT</span>
+        <div class="grid-container">
+            <div class="panel" style="border-color: var(--forensic-red);">
+                <div class="panel-title" style="color: var(--forensic-red);">> DIVISION 01: REINSURANCE CONSTRAINT ACCUMULATION (SWISS RE ALIGNMENT)</div>
+                <div class="meta-line"><strong>> ACTUARIAL FOCUS:</strong> PRE-EMPTIVE TREATY RISK NOTIFICATION</div>
+                <div class="meta-line"><strong>> TARGET HAZARD:</strong> TRACKSIDE VOC/NVC LIABILITIES & SUBSURFACE ENCUMBRANCES</div>
+                <div class="metric-value" style="border-left-color: var(--forensic-red);">
+                    UNDERWRITING RISK BLOCK: <span class="alert-flash" style="color: var(--forensic-red);">CONTRACTUAL INTERCEPTION EMBEDDED</span>
+                </div>
+                <div class="voc-log">
+                    <strong>[FORENSIC-ENFORCEMENT]:</strong> Chemical signatures of trackside VOC/NVC plumes are cross-referenced directly with Swiss Re’s legacy Environmental Impairment Liability exclusions. Hardcoding these material hazards upstream permanently blocks the insurer's ability to utilize arbitrary value denials, forcing a localized remediation mandate.
+                </div>
             </div>
-            <div class="voc-log">
-                <strong>[MUNICIPAL-BRIDGE]:</strong> Isolates the AUM crowd's backlogged capital. By routing compliance capital into Newark's designated 4 Rs framework as audited "Infrastructure Mitigation Fees," tech giants legally shield their capital from taxes while local leadership wins a zero-taxpayer community modernization that unlocks localized power lines.
+
+            <div class="panel" style="border-color: var(--matrix-glow);">
+                <div class="panel-title" style="color: var(--matrix-glow);">> DIVISION 02: NEWARK INFRASTRUCTURE CONDUIT (AUM MUTUAL CONVERSION)</div>
+                <div class="meta-line"><strong>> APPLICATION:</strong> MANDATED MITIGATION FEES // CRA SLATES // TAX EQUITY EXTRACTION</div>
+                <div class="meta-line"><strong>> REDIRECTED BUILDOUT:</strong> MULTI-PHASE 4 Rs UTILITY & CORRIDOR REPOWERING</div>
+                <div class="metric-value" style="border-left-color: var(--matrix-glow);">
+                    MUNICIPAL ALLOCATION STATE: <span style="color: var(--matrix-glow);">PACKAGED LOCAL WINS READY FOR DEPLOYMENT</span>
+                </div>
+                <div class="voc-log">
+                    <strong>[MUNICIPAL-BRIDGE]:</strong> Isolates the AUM crowd's backlogged capital. By routing compliance capital into Newark's designated 4 Rs framework as audited "Infrastructure Mitigation Fees," tech giants legally shield their capital from taxes while local leadership wins a zero-taxpayer community modernization that unlocks localized power lines.
+                </div>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { PresentationInteractionEngine } from './interact.js';
-        const displayEngine = new PresentationInteractionEngine('newark');
-        displayEngine.initPresentationView();
+        try {
+            const displayEngine = new PresentationInteractionEngine('newark');
+            displayEngine.initPresentationView();
+            
+            displayEngine.orchestrator.listenAndSyncPresentation((stage) => {
+                const canvas = document.getElementById('forensic-map-canvas');
+                if (canvas) {
+                    canvas.style.background = (stage === 'VOC_PLUME_OVERLAY') 
+                        ? "radial-gradient(circle at center, #1b2611 0%, #060913 100%)"
+                        : "radial-gradient(circle at center, #0f172a 0%, #060913 100%)";
+                }
+            });
+        } catch (e) {
+            console.warn("Interaction pipeline bypass active:", e.message);
+        }
     </script>
 </body>
 </html>
