@@ -1,43 +1,42 @@
-// Gateway Forensic Platform - Presentation Interaction Engine
+// =============================================================================
+// GATEWAY FORENSIC MATRIX // INTERACTION ENGINE // LOCAL ROOT DOMAIN
+// =============================================================================
+
 export class PresentationInteractionEngine {
-    constructor(mode = 'newark') {
-        this.mode = mode;
-        this.state = {
-            currentStage: 'INITIAL_ALIGNMENT',
-            activePanel: null
-        };
-        // Error-proof orchestrator mock to prevent pipeline crashes
-        this.orchestrator = {
-            listenAndSyncPresentation: (callback) => {
-                // Safely registers hooks without demanding missing DOM components
-                this.stageChangeCallback = callback;
-            }
-        };
+    constructor(context) {
+        this.context = context;
+        this.dataSource = './matrix_data.json';
     }
 
-    initPresentationView() {
-        console.log(`[GATEWAY MATRIX]: Interaction engine initialized for mode: ${this.mode}`);
-        this.setupEventHandlers();
-    }
-
-    setupEventHandlers() {
-        // Find our new flexible panels
-        const panels = document.querySelectorAll('.panel');
+    async initPresentationView() {
+        console.log(`🛰️ Matrix Engine Initialized for context: ${this.context}`);
         
-        panels.forEach((panel, index) => {
-            // Add subtle interactive highlight capabilities
-            panel.style.cursor = 'pointer';
+        try {
+            // Fetch the localized JSON data core directly from the root bypass
+            const response = await fetch(this.dataSource);
+            if (!response.ok) throw new Error('Data pipeline connection failed.');
+            const data = await response.json();
             
-            panel.addEventListener('click', () => {
-                this.state.activePanel = index;
-                console.log(`[MATRIX SELECTION]: Active focus shifted to Division 0${index + 1}`);
-                
-                // Trigger background shift safely if callback exists
-                if (this.stageChangeCallback) {
-                    const targetStage = index === 0 ? 'VOC_PLUME_OVERLAY' : 'INFRASTRUCTURE_ROUTE';
-                    this.stageChangeCallback(targetStage);
-                }
+            this.bindMatrixEvents(data);
+        } catch (error) {
+            console.error(`❌ Perimeter Breach or Missing Data Feed: ${error.message}`);
+        }
+    }
+
+    bindMatrixEvents(data) {
+        const panelSwiss = document.getElementById('panel-swiss');
+        const panelAum = document.getElementById('panel-aum');
+
+        if (panelSwiss && data[0]) {
+            panelSwiss.addEventListener('click', () => {
+                alert(`[CRITICAL AUDIT]: ${data[0].anchor_location}\nSignature: ${data[0].environmental_hazard_signature}\nAllocation: ${data[0].mitigation_fee_allocation}`);
             });
-        });
+        }
+
+        if (panelAum && data[1]) {
+            panelAum.addEventListener('click', () => {
+                alert(`[STRATEGIC REPOWERING]: ${data[1].anchor_location}\nOverride: ${data[1].infrastructure_override}\nFee State: ${data[1].risk_block_status}`);
+            });
+        }
     }
 }
