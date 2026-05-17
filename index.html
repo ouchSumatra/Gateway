@@ -2,56 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Gateway Forensic Platform - Systemic VOC Matrix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gateway Forensic Platform - Newark Municipal Alignment</title>
     <style>
-        body { background-color: #050a12; color: #4af626; font-family: 'Courier New', monospace; padding: 30px; margin: 0; }
-        .matrix-header { border-bottom: 2px solid #1f3a60; padding-bottom: 15px; margin-bottom: 25px; color: #5dade2; font-size: 1.2rem; font-weight: bold; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .panel { border: 1px solid #1f3a60; padding: 20px; background: rgba(10, 25, 47, 0.7); box-shadow: 0 0 15px rgba(31, 58, 96, 0.3); }
-        .panel-title { font-weight: bold; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px dashed #1f3a60; }
-        .threat-color { color: #f1948a; }
-        .solution-color { color: #5dade2; }
-        .alert-flash { color: #f4d03f; animation: blink 2s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-        .metric-value { font-size: 1.1rem; color: #fff; background: #112240; padding: 5px 10px; display: inline-block; margin: 5px 0; border-left: 3px solid; }
-        .voc-log { font-size: 0.85rem; color: #a6acaf; background: #070f1e; padding: 10px; border: 1px solid #1a365d; margin-top: 10px; }
+        :root {
+            --bg-terminal: #060913;
+            --panel-bg: rgba(13, 22, 38, 0.95);
+            --border-clean: #1f3a60;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --matrix-glow: #10b981;
+            --forensic-red: #f1948a;
+            --institutional-blue: #58a6ff;
+        }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--bg-terminal); color: var(--text-primary);
+            font-family: 'Courier New', monospace; overflow: hidden;
+        }
+        #forensic-map-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #0f172a 0%, #060913 100%);
+            z-index: 1;
+        }
+        .map-grid-lines {
+            position: absolute; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: 40px 40px; z-index: 1;
+        }
+        .matrix-header { 
+            position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 1200px; border-bottom: 2px solid var(--border-clean); 
+            padding-bottom: 15px; font-size: 1.1rem; font-weight: bold; z-index: 10;
+            display: flex; justify-content: space-between; color: var(--institutional-blue);
+        }
+        .grid-container { 
+            position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 1200px; display: grid; grid-template-columns: 1fr 1fr; 
+            gap: 25px; z-index: 10;
+        }
+        .panel { 
+            border: 1px solid var(--border-clean); padding: 22px; 
+            background: var(--panel-bg); backdrop-filter: blur(8px);
+        }
+        .panel-title { font-weight: bold; font-size: 1rem; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px dashed var(--border-clean); }
+        .meta-line { font-size: 0.85rem; margin: 6px 0; color: #cbd5e1; }
+        .metric-value { font-size: 0.95rem; color: #fff; background: #0f172a; padding: 6px 12px; display: inline-block; margin: 10px 0; border-left: 3px solid; }
+        .voc-log { font-size: 0.8rem; color: #94a3b8; background: #030712; padding: 12px; border: 1px solid #1e293b; margin-top: 10px; line-height: 1.4; }
+        .alert-flash { animation: blink 2.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <div id="forensic-map-canvas">
+        <div class="map-grid-lines"></div>
+    </div>
+
     <div class="matrix-header">
-        🛰️ GATEWAY FORENSIC MATRIX // EU STEWARDSHIP & GLOBAL VOC ALIGNMENT
+        <div>🛰️ GATEWAY FORENSIC MATRIX // NEWARK PUBLIC-PRIVATE CONDUIT</div>
+        <div style="font-size: 0.85rem; color: var(--matrix-glow);">PRIMARY OBJECTIVE // REGULATORY CLEARANCE FEED</div>
     </div>
 
     <div class="grid-container">
-        <div class="panel" style="border-color: #ec7063;">
-            <div class="panel-title threat-color">> TRANCHE 01: GLOBAL REINSURANCE ACCOUNTABILITY (VOC TRACKER)</div>
-            <p>> DETECTED CONDUCT: ARBITRARY VALUE DENIAL PATHWAY</p>
-            <p>> PARALLEL RISK: REFUGEE / LOCAL LABOR DISPLACEMENT EXPOSURE</p>
-            
-            <div class="metric-value" style="border-left-color: #ec7063;">
-                EU INSTITUTIONAL FIDUCIARY BREACH: <span class="alert-flash">CRITICAL DEVIATION</span>
+        <div class="panel" style="border-color: var(--forensic-red);">
+            <div class="panel-title" style="color: var(--forensic-red);">> DIVISION 01: REINSURANCE CONSTRAINT ACCUMULATION (SWISS RE ALIGNMENT)</div>
+            <div class="meta-line">> ACTUARIAL FOCUS: PRE-EMPTIVE TREATY RISK NOTIFICATION</div>
+            <div class="meta-line">> TARGET HAZARD: TRACKSIDE VOC/NVC LIABILITIES & SUBSURFACE ENCUMBRANCES</div>
+            <div class="metric-value" style="border-left-color: var(--forensic-red);">
+                UNDERWRITING RISK BLOCK: <span class="alert-flash" style="color: var(--forensic-red);">CONTRACTUAL INTERCEPTION EMBEDDED</span>
             </div>
-            
             <div class="voc-log">
-                <strong>[VOC-LOG-09]:</strong> Underwriter patterns cross-referenced with European CSRD Double Materiality protocols. Asset manager proxy retaliation metrics initialized for next board voting cycle.
+                <strong>[FORENSIC-ENFORCEMENT]:</strong> Chemical signatures of trackside VOC/NVC plumes are cross-referenced directly with Swiss Re’s legacy Environmental Impairment Liability exclusions. Hardcoding these material hazards upstream paralyzes the insurer's ability to utilize arbitrary value denials, causing an accumulation threat that forces carriers to require remediation.
             </div>
         </div>
 
-        <div class="panel" style="border-color: #5dade2;">
-            <div class="panel-title solution-color">> TRANCHE 02: THE 4 Rs INFRASTRUCTURE OPTIMIZATION</div>
-            <p>> MITIGATION BLUEPRINT: DE-RISK // STABILIZE // ACCELERATE</p>
-            <p>> PORTFOLIO STATUS: REPAIR • REHAB • RESKILL • REGENERATE REVENUE</p>
-            
-            <div class="metric-value" style="border-left-color: #5dade2;">
-                EUROPEAN "JUST TRANSITION" ALIGNMENT: 98.4% MATCH
+        <div class="panel" style="border-color: var(--matrix-glow);">
+            <div class="panel-title" style="color: var(--matrix-glow);">> DIVISION 02: NEWARK INFRASTRUCTURE CONDUIT (AUM MUTUAL CONVERSION)</div>
+            <div class="meta-line">> APPLICATION: MANDATED MITIGATION FEES // CRA SLATES // TAX EQUITY EXTRACTION</div>
+            <div class="meta-line">> REDIRECTED BUILDOUT: MULTI-PHASE 4 Rs UTILITY & CORRIDOR REPOWERING</div>
+            <div class="metric-value" style="border-left-color: var(--matrix-glow);">
+                MUNICIPAL ALLOCATION STATE: <span style="color: var(--matrix-glow);">PACKAGED LOCAL WINS READY FOR DEPLOYMENT</span>
             </div>
-            
             <div class="voc-log">
-                <strong>[RESOLUTION-LINK]:</strong> Capital reallocation to the 4 Rs converts a negative liabilities claims dispute into an active, compliant Social Development asset for institutional backing.
+                <strong>[MUNICIPAL-BRIDGE]:</strong> Isolates the AUM crowd's backlogged capital. By routing compliance capital into Newark's designated 4 Rs framework as audited "Infrastructure Mitigation Fees," tech giants legally shield their capital from taxes while local leadership wins a zero-taxpayer community modernization that unlocks localized power lines.
             </div>
         </div>
     </div>
 
+    <script type="module">
+        import { PresentationInteractionEngine } from './interact.js';
+        const displayEngine = new PresentationInteractionEngine('newark');
+        displayEngine.initPresentationView();
+    </script>
 </body>
 </html>
